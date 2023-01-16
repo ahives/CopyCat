@@ -1,4 +1,5 @@
 using CopyCat.Data.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace CopyCat.Data;
 
@@ -15,12 +16,13 @@ public class ImpersonationAdminProvider :
     public List<ImpersonatedAccount> GetImpersonatedAccounts(Guid accountId)
     {
         var accounts = from account in _db.ImpersonatedAccounts
-            where account.AccountId == accountId && account.IsActive
+            where account.AccountId == accountId
             select new ImpersonatedAccount
             {
                 Id = account.Id,
                 AccountId = account.AccountId,
                 Name = account.Name,
+                IsActive = account.IsActive,
                 SendingFacilityId = account.SendingFacilityId,
                 SendingAppId = account.SendingAppId,
                 CreatedOn = account.CreatedOn
@@ -38,6 +40,7 @@ public class ImpersonationAdminProvider :
                 Id = account.Id,
                 AccountId = account.AccountId,
                 Name = account.Name,
+                IsActive = account.IsActive,
                 SendingFacilityId = account.SendingFacilityId,
                 SendingAppId = account.SendingAppId,
                 CreatedOn = account.CreatedOn
@@ -46,7 +49,7 @@ public class ImpersonationAdminProvider :
         return accounts.ToList();
     }
 
-    public void AddImpersonatedAccount(ImpersonatedAccount account)
+    public bool TryCreateImpersonatedAccount(ImpersonatedAccount account)
     {
         var entity = new ImpersonatedAccountEntity
         {
@@ -61,5 +64,7 @@ public class ImpersonationAdminProvider :
 
         _db.ImpersonatedAccounts.Add(entity);
         _db.SaveChanges();
+
+        return _db.Entry(entity).State == EntityState.Added;
     }
 }

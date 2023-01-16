@@ -1,3 +1,5 @@
+using CopyCat.Data.Model;
+
 namespace CopyCat.Data;
 
 public interface IImpersonationAdminProvider
@@ -6,5 +8,5 @@ public interface IImpersonationAdminProvider
 
     List<ImpersonatedAccount> GetImpersonatedAccounts();
 
-    void AddImpersonatedAccount(ImpersonatedAccount account);
+    bool TryCreateImpersonatedAccount(ImpersonatedAccount account);
 }

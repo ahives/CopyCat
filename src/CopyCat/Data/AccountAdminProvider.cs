@@ -35,6 +35,7 @@ public class AccountAdminProvider :
             Id = account.Id,
             Name = account.Name,
             IsActive = account.IsActive,
+            IsDeleted = false,
             CreatedOn = DateTimeOffset.UtcNow,
             UpdatedOn = DateTimeOffset.UtcNow
         };

@@ -1,11 +1,14 @@
-namespace CopyCat.Data;
+namespace CopyCat.Model;
 
-public record ImpersonatedAccount
+public record CreateImpersonatedAccountRequest
 {
-    public Guid Id { get; set; }
     public string Name { get; set; }
+    
     public Guid AccountId { get; set; }
+    
     public string SendingFacilityId { get; set; }
+    
     public string SendingAppId { get; set; }
-    public DateTimeOffset CreatedOn { get; set; }
+
+    public bool IsActive { get; set; }
 }

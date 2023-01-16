@@ -20,7 +20,7 @@ public class AccountService :
     {
         var data = _provider.GetAllAccounts();
         
-        return new Result<IReadOnlyList<Account>> {Data = data};
+        return new Result<IReadOnlyList<Account>> {Data = data, IsData = data.Any(), HasFaulted = false};
     }
 
     public Result<Account> CreateAccount(CreateAccountRequest request)
@@ -38,6 +38,6 @@ public class AccountService :
         
         bool isCreated = _provider.TryCreateAccount(account);
 
-        return new Result<Account> {Data = account, HasFaulted = false, IsData = isCreated};
+        return new Result<Account> {Data = account, HasFaulted = !isCreated, IsData = isCreated};
     }
 }

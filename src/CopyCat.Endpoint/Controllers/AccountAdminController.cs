@@ -21,7 +21,7 @@ public class AccountAdminController :
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<Account>))]
     public IActionResult GetAccounts()
     {
-        Result<IReadOnlyList<Account>> result = _service.GetAllAccounts();
+        var result = _service.GetAllAccounts();
         
         return Ok(result.Data);
     }
@@ -30,9 +30,9 @@ public class AccountAdminController :
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult CreateAccount(CreateAccountRequest request)
     {
-        Result<Account> result = _service.CreateAccount(request);
+        var result = _service.CreateAccount(request);
 
-        if (result.IsData)
+        if (!result.HasFaulted)
             return Ok(result.Data);
 
         return BadRequest();

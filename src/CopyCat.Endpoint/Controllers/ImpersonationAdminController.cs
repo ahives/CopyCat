@@ -1,38 +1,55 @@
-namespace CopyCat.Endpoint.Controllers;
-
-using Data;
+using CopyCat.Data.Model;
+using CopyCat.Model;
+using CopyCat.Services;
 using Microsoft.AspNetCore.Mvc;
 
+namespace CopyCat.Endpoint.Controllers;
+
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]/[action]")]
 public class ImpersonationAdminController :
     ControllerBase
 {
-    private readonly IImpersonationAdminProvider _provider;
+    private readonly IImpersonatedAccountAdminService _service;
 
-    public ImpersonationAdminController(IImpersonationAdminProvider provider)
+    public ImpersonationAdminController(IImpersonatedAccountAdminService service)
     {
-        _provider = provider;
+        _service = service;
     }
 
-    [HttpPost(Name = "AddImpersonatedAccount")]
+    [HttpPost(Name = "CreateImpersonatedAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult AddImpersonatedAccount(ImpersonatedAccount account)
+    public IActionResult CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
     {
-        _provider.AddImpersonatedAccount(account);
-        return Ok();
+        var result = _service.CreateImpersonatedAccount(request);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
     }
 
     [HttpGet(Name = "GetImpersonatedAccounts")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
     public IActionResult GetImpersonatedAccounts(Guid accountId)
     {
-        return Ok(_provider.GetImpersonatedAccounts(accountId));
+        var result = _service.GetImpersonatedAccounts(accountId);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
     }
 
-    // [HttpGet(Name = "GetAllImpersonatedAccounts")]
-    // public List<ImpersonatedAccount> GetAllImpersonatedAccounts()
-    // {
-    //     return _provider.GetImpersonatedAccounts();
-    // }
+    [HttpGet(Name = "GetAllImpersonatedAccounts")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
+    public IActionResult GetAllImpersonatedAccounts()
+    {
+        var result = _service.GetAllImpersonatedAccounts();
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
 }

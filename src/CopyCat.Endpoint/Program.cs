@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ImpersonationDbContext>(x =>
 builder.Services.AddScoped<IImpersonationAdminProvider, ImpersonationAdminProvider>();
 builder.Services.AddScoped<IAccountAdminProvider, AccountAdminProvider>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IImpersonatedAccountAdminService, ImpersonatedAccountAdminService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
