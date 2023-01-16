@@ -1,4 +1,5 @@
 using CopyCat.Data.Model;
+using CopyCat.Model;
 using CopyCat.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,12 +28,12 @@ public class AccountAdminController :
 
     [HttpPost(Name = "CreateAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult CreateAccount(Account account)
+    public IActionResult CreateAccount(CreateAccountRequest request)
     {
-        Result result = _service.TryCreateAccount(account);
+        Result<Account> result = _service.CreateAccount(request);
 
         if (result.IsData)
-            return Ok();
+            return Ok(result.Data);
 
         return BadRequest();
     }

@@ -1,6 +1,8 @@
 using CopyCat.Data;
 using CopyCat.Data.Model;
 using CopyCat.Extensions;
+using CopyCat.Model;
+using MassTransit;
 
 namespace CopyCat.Services;
 
@@ -16,18 +18,26 @@ public class AccountService :
 
     public Result<IReadOnlyList<Account>> GetAllAccounts()
     {
-        List<Account> data = _provider.GetAllAccounts();
+        var data = _provider.GetAllAccounts();
         
         return new Result<IReadOnlyList<Account>> {Data = data};
     }
 
-    public Result TryCreateAccount(Account account)
+    public Result<Account> CreateAccount(CreateAccountRequest request)
     {
-        if (!account.IsValid())
-            return new Result {IsData = false, HasFaulted = true};
+        if (!request.IsValid())
+            return new Result<Account> {IsData = false, HasFaulted = true};
+
+        var account = new Account
+        {
+            Id = NewId.NextGuid(),
+            Name = request.Name,
+            IsActive = request.IsActive,
+            CreatedOn = DateTimeOffset.UtcNow
+        };
         
         bool isCreated = _provider.TryCreateAccount(account);
 
-        return new Result {IsData = isCreated};
+        return new Result<Account> {Data = account, HasFaulted = false, IsData = isCreated};
     }
 }
