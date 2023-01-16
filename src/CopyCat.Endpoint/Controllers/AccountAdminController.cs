@@ -10,9 +10,9 @@ namespace CopyCat.Endpoint.Controllers;
 public class AccountAdminController :
     ControllerBase
 {
-    private readonly IAccountService _service;
+    private readonly IAccountAdminService _service;
 
-    public AccountAdminController(IAccountService service)
+    public AccountAdminController(IAccountAdminService service)
     {
         _service = service;
     }

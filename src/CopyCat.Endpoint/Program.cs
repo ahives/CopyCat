@@ -15,9 +15,9 @@ IConfiguration configuration = new ConfigurationBuilder()
 builder.Services.AddDbContext<ImpersonationDbContext>(x =>
     x.UseNpgsql(configuration.GetConnectionString("ImpersonationDbConnection")));
 
-builder.Services.AddScoped<IImpersonationAdminProvider, ImpersonationAdminProvider>();
-builder.Services.AddScoped<IAccountAdminProvider, AccountAdminProvider>();
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IImpersonationAdminDataProvider, ImpersonationAdminDataProvider>();
+builder.Services.AddScoped<IAccountAdminDataProvider, AccountAdminDataProvider>();
+builder.Services.AddScoped<IAccountAdminService, AccountAdminService>();
 builder.Services.AddScoped<IImpersonatedAccountAdminService, ImpersonatedAccountAdminService>();
 
 builder.Services.AddControllers();

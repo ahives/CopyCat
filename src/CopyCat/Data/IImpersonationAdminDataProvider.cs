@@ -2,7 +2,7 @@ using CopyCat.Data.Model;
 
 namespace CopyCat.Data;
 
-public interface IImpersonationAdminProvider
+public interface IImpersonationAdminDataProvider
 {
     List<ImpersonatedAccount> GetImpersonatedAccounts(Guid accountId);
 

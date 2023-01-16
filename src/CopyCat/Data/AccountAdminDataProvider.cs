@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CopyCat.Data;
 
-public class AccountAdminProvider :
-    IAccountAdminProvider
+public class AccountAdminDataProvider :
+    IAccountAdminDataProvider
 {
     private readonly ImpersonationDbContext _db;
 
-    public AccountAdminProvider(ImpersonationDbContext db)
+    public AccountAdminDataProvider(ImpersonationDbContext db)
     {
         _db = db;
     }
@@ -44,5 +44,12 @@ public class AccountAdminProvider :
         _db.SaveChanges();
 
         return _db.Entry(entity).State == EntityState.Added;
+    }
+
+    public bool FindAccount(Guid accountId)
+    {
+        var account = _db.Accounts.Find(accountId);
+
+        return account is not null;
     }
 }

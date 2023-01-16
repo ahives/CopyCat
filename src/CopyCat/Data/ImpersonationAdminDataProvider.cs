@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CopyCat.Data;
 
-public class ImpersonationAdminProvider :
-    IImpersonationAdminProvider
+public class ImpersonationAdminDataProvider :
+    IImpersonationAdminDataProvider
 {
     private readonly ImpersonationDbContext _db;
 
-    public ImpersonationAdminProvider(ImpersonationDbContext db)
+    public ImpersonationAdminDataProvider(ImpersonationDbContext db)
     {
         _db = db;
     }

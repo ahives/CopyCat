@@ -3,7 +3,7 @@ using CopyCat.Model;
 
 namespace CopyCat.Services;
 
-public interface IAccountService
+public interface IAccountAdminService
 {
     Result<IReadOnlyList<Account>> GetAllAccounts();
 
