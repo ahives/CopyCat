@@ -13,7 +13,7 @@ public class AccountAdminProvider :
         _db = db;
     }
 
-    public List<Account> GetAccounts()
+    public List<Account> GetAllAccounts()
     {
         var accounts = from account in _db.Accounts
             where account.IsDeleted == false
@@ -28,7 +28,7 @@ public class AccountAdminProvider :
         return accounts.ToList();
     }
 
-    public bool TryAddAccount(Account account)
+    public bool TryCreateAccount(Account account)
     {
         var entity = new AccountEntity
         {

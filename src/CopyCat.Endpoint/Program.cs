@@ -1,4 +1,5 @@
 using CopyCat.Data;
+using CopyCat.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<ImpersonationDbContext>(x =>
 
 builder.Services.AddScoped<IImpersonationAdminProvider, ImpersonationAdminProvider>();
 builder.Services.AddScoped<IAccountAdminProvider, AccountAdminProvider>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

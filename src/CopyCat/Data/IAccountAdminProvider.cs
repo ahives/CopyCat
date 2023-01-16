@@ -4,7 +4,7 @@ namespace CopyCat.Data;
 
 public interface IAccountAdminProvider
 {
-    List<Account> GetAccounts();
+    List<Account> GetAllAccounts();
 
-    bool TryAddAccount(Account account);
+    bool TryCreateAccount(Account account);
 }

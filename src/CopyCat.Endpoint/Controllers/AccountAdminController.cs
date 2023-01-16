@@ -1,5 +1,5 @@
-using CopyCat.Data;
 using CopyCat.Data.Model;
+using CopyCat.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CopyCat.Endpoint.Controllers;
@@ -9,30 +9,31 @@ namespace CopyCat.Endpoint.Controllers;
 public class AccountAdminController :
     ControllerBase
 {
-    private readonly IAccountAdminProvider _provider;
+    private readonly IAccountService _service;
 
-    public AccountAdminController(IAccountAdminProvider provider)
+    public AccountAdminController(IAccountService service)
     {
-        _provider = provider;
+        _service = service;
     }
 
     [HttpGet(Name = "GetAccounts")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<Account>))]
     public IActionResult GetAccounts()
     {
-        return Ok(_provider.GetAccounts());
+        Result<IReadOnlyList<Account>> result = _service.GetAllAccounts();
+        
+        return Ok(result.Data);
     }
 
-    [HttpPost(Name = "AddAccount")]
+    [HttpPost(Name = "CreateAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult AddAccount(Account account)
+    public IActionResult CreateAccount(Account account)
     {
-        _provider.TryAddAccount(account);
-        return Ok();
-        // if (!IsValidAddAccountRequest(account))
-        //     return BadRequest();
-        //
-        // if (_provider.TryAddAccount(account))
-        //     return Ok();
+        Result result = _service.TryCreateAccount(account);
+
+        if (result.IsData)
+            return Ok();
+
+        return BadRequest();
     }
 }
