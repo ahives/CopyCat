@@ -4,9 +4,13 @@ namespace CopyCat.Data;
 
 public interface IImpersonationAdminDataProvider
 {
-    List<ImpersonatedAccount> GetImpersonatedAccounts(Guid accountId);
+    List<ImpersonatedAccount> GetAccounts(Guid accountId);
 
-    List<ImpersonatedAccount> GetImpersonatedAccounts();
+    List<ImpersonatedAccount> GetAllAccounts();
 
-    bool TryCreateImpersonatedAccount(ImpersonatedAccount account);
+    bool TryCreateAccount(ImpersonatedAccount account);
+
+    bool TryActivateAccount(Guid id, out ImpersonatedAccount account);
+
+    bool TryDeactivateAccount(Guid id, out ImpersonatedAccount account);
 }

@@ -12,13 +12,15 @@ public class ImpersonatedAccountAdminService :
     private readonly IImpersonationAdminDataProvider _impersonationDataProvider;
     private readonly IAccountAdminDataProvider _accountDataProvider;
 
-    public ImpersonatedAccountAdminService(IImpersonationAdminDataProvider impersonationDataProvider, IAccountAdminDataProvider accountDataProvider)
+    public ImpersonatedAccountAdminService(
+        IImpersonationAdminDataProvider impersonationDataProvider,
+        IAccountAdminDataProvider accountDataProvider)
     {
         _impersonationDataProvider = impersonationDataProvider;
         _accountDataProvider = accountDataProvider;
     }
 
-    public Result<ImpersonatedAccount> CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
+    public Result<ImpersonatedAccount> CreateAccount(CreateImpersonatedAccountRequest request)
     {
         if (!request.IsValid())
             return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
@@ -26,7 +28,7 @@ public class ImpersonatedAccountAdminService :
         if (!_accountDataProvider.FindAccount(request.AccountId))
             return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
 
-        var entity = new ImpersonatedAccount
+        var account = new ImpersonatedAccount
         {
             Id = NewId.NextGuid(),
             Name = request.Name,
@@ -37,21 +39,35 @@ public class ImpersonatedAccountAdminService :
             CreatedOn = DateTimeOffset.UtcNow
         };
 
-        bool isCreated = _impersonationDataProvider.TryCreateImpersonatedAccount(entity);
+        bool isCreated = _impersonationDataProvider.TryCreateAccount(account);
 
-        return new Result<ImpersonatedAccount> {Data = entity, IsData = isCreated, HasFaulted = isCreated};
+        return new Result<ImpersonatedAccount> {Data = account, IsData = isCreated, HasFaulted = isCreated};
     }
 
-    public Result<IReadOnlyList<ImpersonatedAccount>> GetAllImpersonatedAccounts()
+    public Result<ImpersonatedAccount> ActivateAccount(Guid id)
     {
-        var data = _impersonationDataProvider.GetImpersonatedAccounts();
+        bool isUpdated = _impersonationDataProvider.TryActivateAccount(id, out ImpersonatedAccount account);
+
+        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+    }
+
+    public Result<ImpersonatedAccount> DeactivateAccount(Guid id)
+    {
+        bool isUpdated = _impersonationDataProvider.TryDeactivateAccount(id, out ImpersonatedAccount account);
+
+        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+    }
+
+    public Result<IReadOnlyList<ImpersonatedAccount>> GetAllAccounts()
+    {
+        var data = _impersonationDataProvider.GetAllAccounts();
         
         return new Result<IReadOnlyList<ImpersonatedAccount>> {Data = data, IsData = data.Any(), HasFaulted = false};
     }
 
-    public Result<IReadOnlyList<ImpersonatedAccount>> GetImpersonatedAccounts(Guid accountId)
+    public Result<IReadOnlyList<ImpersonatedAccount>> GetAccounts(Guid id)
     {
-        var data = _impersonationDataProvider.GetImpersonatedAccounts(accountId);
+        var data = _impersonationDataProvider.GetAccounts(id);
         
         return new Result<IReadOnlyList<ImpersonatedAccount>> {Data = data, IsData = data.Any(), HasFaulted = false};
     }

@@ -21,7 +21,7 @@ public class ImpersonationAdminController :
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
     {
-        var result = _service.CreateImpersonatedAccount(request);
+        var result = _service.CreateAccount(request);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -33,7 +33,7 @@ public class ImpersonationAdminController :
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
     public IActionResult GetImpersonatedAccounts(Guid accountId)
     {
-        var result = _service.GetImpersonatedAccounts(accountId);
+        var result = _service.GetAccounts(accountId);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -45,7 +45,31 @@ public class ImpersonationAdminController :
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
     public IActionResult GetAllImpersonatedAccounts()
     {
-        var result = _service.GetAllImpersonatedAccounts();
+        var result = _service.GetAllAccounts();
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [HttpGet(Name = "ActivateImpersonatedAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
+    public IActionResult ActivateImpersonatedAccount(Guid id)
+    {
+        var result = _service.ActivateAccount(id);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [HttpGet(Name = "DeactivateImpersonatedAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
+    public IActionResult DeactivateImpersonatedAccount(Guid id)
+    {
+        var result = _service.DeactivateAccount(id);
 
         if (!result.HasFaulted)
             return Ok(result.Data);

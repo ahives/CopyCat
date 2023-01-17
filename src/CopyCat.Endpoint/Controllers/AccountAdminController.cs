@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CopyCat.Endpoint.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]/[action]")]
 public class AccountAdminController :
     ControllerBase
 {

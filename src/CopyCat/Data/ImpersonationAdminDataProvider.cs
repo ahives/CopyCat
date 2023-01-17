@@ -13,7 +13,7 @@ public class ImpersonationAdminDataProvider :
         _db = db;
     }
 
-    public List<ImpersonatedAccount> GetImpersonatedAccounts(Guid accountId)
+    public List<ImpersonatedAccount> GetAccounts(Guid accountId)
     {
         var accounts = from account in _db.ImpersonatedAccounts
             where account.AccountId == accountId
@@ -31,7 +31,7 @@ public class ImpersonationAdminDataProvider :
         return accounts.ToList();
     }
 
-    public List<ImpersonatedAccount> GetImpersonatedAccounts()
+    public List<ImpersonatedAccount> GetAllAccounts()
     {
         var accounts = from account in _db.ImpersonatedAccounts
             where account.IsDeleted == false
@@ -49,7 +49,7 @@ public class ImpersonationAdminDataProvider :
         return accounts.ToList();
     }
 
-    public bool TryCreateImpersonatedAccount(ImpersonatedAccount account)
+    public bool TryCreateAccount(ImpersonatedAccount account)
     {
         var entity = new ImpersonatedAccountEntity
         {
@@ -66,5 +66,44 @@ public class ImpersonationAdminDataProvider :
         _db.SaveChanges();
 
         return _db.Entry(entity).State == EntityState.Added;
+    }
+
+    public bool TryActivateAccount(Guid id, out ImpersonatedAccount account)
+    {
+        return SetIsActiveAccount(id, true, out account);
+    }
+
+    public bool TryDeactivateAccount(Guid id, out ImpersonatedAccount account)
+    {
+        return SetIsActiveAccount(id, false, out account);
+    }
+
+    bool SetIsActiveAccount(Guid id, bool isActive, out ImpersonatedAccount account)
+    {
+        var entity = _db.ImpersonatedAccounts.Find(id);
+
+        if (entity is null)
+        {
+            account = default!;
+            return false;
+        }
+
+        entity.IsActive = isActive;
+
+        _db.ImpersonatedAccounts.Update(entity);
+        _db.SaveChanges();
+
+        account = new ImpersonatedAccount
+        {
+            Id = entity.Id,
+            AccountId = entity.AccountId,
+            Name = entity.Name,
+            IsActive = entity.IsActive,
+            SendingFacilityId = entity.SendingFacilityId,
+            SendingAppId = entity.SendingAppId,
+            CreatedOn = entity.CreatedOn
+        };
+        
+        return _db.Entry(entity).State == EntityState.Modified;
     }
 }

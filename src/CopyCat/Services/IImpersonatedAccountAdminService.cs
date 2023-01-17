@@ -5,9 +5,13 @@ namespace CopyCat.Services;
 
 public interface IImpersonatedAccountAdminService
 {
-    Result<ImpersonatedAccount> CreateImpersonatedAccount(CreateImpersonatedAccountRequest request);
+    Result<ImpersonatedAccount> CreateAccount(CreateImpersonatedAccountRequest request);
+    
+    Result<ImpersonatedAccount> ActivateAccount(Guid id);
+    
+    Result<ImpersonatedAccount> DeactivateAccount(Guid id);
 
-    Result<IReadOnlyList<ImpersonatedAccount>> GetAllImpersonatedAccounts();
+    Result<IReadOnlyList<ImpersonatedAccount>> GetAllAccounts();
 
-    Result<IReadOnlyList<ImpersonatedAccount>> GetImpersonatedAccounts(Guid accountId);
+    Result<IReadOnlyList<ImpersonatedAccount>> GetAccounts(Guid id);
 }
