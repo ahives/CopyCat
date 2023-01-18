@@ -40,4 +40,18 @@ public class AccountAdminService :
 
         return new Result<Account> {Data = account, HasFaulted = !isCreated, IsData = isCreated};
     }
+
+    public Result<Account> ActivateAccount(Guid id)
+    {
+        bool isUpdated = _dataProvider.TryActivateAccount(id, out Account account);
+
+        return new Result<Account> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+    }
+
+    public Result<Account> DeactivateAccount(Guid id)
+    {
+        bool isUpdated = _dataProvider.TryDeactivateAccount(id, out Account account, out IReadOnlyList<ImpersonatedAccount> impersonatedAccounts);
+
+        return new Result<Account> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+    }
 }

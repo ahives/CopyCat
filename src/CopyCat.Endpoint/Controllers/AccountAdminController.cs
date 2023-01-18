@@ -37,4 +37,28 @@ public class AccountAdminController :
 
         return BadRequest();
     }
+
+    [HttpPost(Name = "ActivateAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
+    public IActionResult ActivateAccount(Guid id)
+    {
+        var result = _service.ActivateAccount(id);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [HttpPost(Name = "DeactivateAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
+    public IActionResult DeactivateAccount(Guid id)
+    {
+        var result = _service.DeactivateAccount(id);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
 }

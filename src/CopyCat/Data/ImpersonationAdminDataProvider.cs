@@ -1,4 +1,5 @@
 using CopyCat.Data.Model;
+using CopyCat.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CopyCat.Data;
@@ -180,16 +181,7 @@ public class ImpersonationAdminDataProvider :
         _db.ImpersonatedAccounts.Update(entity);
         _db.SaveChanges();
 
-        account = new ImpersonatedAccount
-        {
-            Id = entity.Id,
-            AccountId = entity.AccountId,
-            Name = entity.Name,
-            IsActive = entity.IsActive,
-            SendingFacilityId = entity.SendingFacilityId,
-            SendingClientId = entity.SendingClientId,
-            CreatedOn = entity.CreatedOn
-        };
+        account = entity.MapTo();
         
         return _db.Entry(entity).State == EntityState.Modified;
     }

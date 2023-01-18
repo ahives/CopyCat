@@ -12,9 +12,9 @@ public interface IImpersonatedAccountAdminService
     Result<ImpersonatedAccount> UpdateSendingFacilityId(Guid id, string sendingFacilityId);
 
     Result<ImpersonatedAccount> UpdateAccountName(Guid id, string name);
-    
+
     Result<ImpersonatedAccount> ActivateAccount(Guid id);
-    
+
     Result<ImpersonatedAccount> DeactivateAccount(Guid id);
 
     Result<IReadOnlyList<ImpersonatedAccount>> GetAllAccounts();
