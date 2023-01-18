@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CopyCat.Migrations
 {
     [DbContext(typeof(ImpersonationDbContext))]
-    [Migration("20230115150606_InitialCreate")]
+    [Migration("20230117205258_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -86,10 +86,10 @@ namespace CopyCat.Migrations
                         .HasColumnType("text")
                         .HasColumnName("Name");
 
-                    b.Property<string>("SendingAppId")
+                    b.Property<string>("SendingClientId")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("SendingAppId");
+                        .HasColumnName("SendingClientId");
 
                     b.Property<string>("SendingFacilityId")
                         .IsRequired()

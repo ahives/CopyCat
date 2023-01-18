@@ -83,10 +83,10 @@ namespace CopyCat.Migrations
                         .HasColumnType("text")
                         .HasColumnName("Name");
 
-                    b.Property<string>("SendingAppId")
+                    b.Property<string>("SendingClientId")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("SendingAppId");
+                        .HasColumnName("SendingClientId");
 
                     b.Property<string>("SendingFacilityId")
                         .IsRequired()

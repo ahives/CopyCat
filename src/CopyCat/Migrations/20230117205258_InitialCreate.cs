@@ -35,7 +35,7 @@ namespace CopyCat.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     AccountId = table.Column<Guid>(type: "uuid", nullable: false),
                     SendingFacilityId = table.Column<string>(type: "text", nullable: false),
-                    SendingAppId = table.Column<string>(type: "text", nullable: false),
+                    SendingClientId = table.Column<string>(type: "text", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),

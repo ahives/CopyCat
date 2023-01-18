@@ -18,10 +18,46 @@ public class ImpersonationAdminController :
     }
 
     [HttpPost(Name = "CreateImpersonatedAccount")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
     {
         var result = _service.CreateAccount(request);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [HttpPost(Name = "UpdateImpersonatedAccountName")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
+    public IActionResult UpdateImpersonatedAccountName(Guid id, string name)
+    {
+        var result = _service.UpdateAccountName(id, name);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [HttpPost(Name = "UpdateImpersonatedAccountSendingClientId")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
+    public IActionResult UpdateImpersonatedAccountSendingClientId(Guid id, string sendingClientId)
+    {
+        var result = _service.UpdateSendingClientId(id, sendingClientId);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [HttpPost(Name = "UpdateImpersonatedAccountSendingFacilityId")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
+    public IActionResult UpdateImpersonatedAccountSendingFacilityId(Guid id, string sendingFacilityId)
+    {
+        var result = _service.UpdateSendingFacilityId(id, sendingFacilityId);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -53,7 +89,7 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpGet(Name = "ActivateImpersonatedAccount")]
+    [HttpPost(Name = "ActivateImpersonatedAccount")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult ActivateImpersonatedAccount(Guid id)
     {
@@ -65,7 +101,7 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpGet(Name = "DeactivateImpersonatedAccount")]
+    [HttpPost(Name = "DeactivateImpersonatedAccount")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult DeactivateImpersonatedAccount(Guid id)
     {

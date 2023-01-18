@@ -19,8 +19,8 @@ public class ImpersonatedAccountEntity
     [Column("SendingFacilityId")]
     public string SendingFacilityId { get; set; }
 
-    [Column("SendingAppId")]
-    public string SendingAppId { get; set; }
+    [Column("SendingClientId")]
+    public string SendingClientId { get; set; }
 
     [Column("IsActive"), Required]
     public bool IsActive { get; set; }

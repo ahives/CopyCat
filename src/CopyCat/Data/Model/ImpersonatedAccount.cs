@@ -10,7 +10,7 @@ public record ImpersonatedAccount
     
     public string SendingFacilityId { get; set; }
     
-    public string SendingAppId { get; set; }
+    public string SendingClientId { get; set; }
 
     public bool IsActive { get; set; }
 

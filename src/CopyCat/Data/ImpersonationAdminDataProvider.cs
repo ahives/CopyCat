@@ -24,7 +24,7 @@ public class ImpersonationAdminDataProvider :
                 Name = account.Name,
                 IsActive = account.IsActive,
                 SendingFacilityId = account.SendingFacilityId,
-                SendingAppId = account.SendingAppId,
+                SendingClientId = account.SendingClientId,
                 CreatedOn = account.CreatedOn
             };
 
@@ -42,7 +42,7 @@ public class ImpersonationAdminDataProvider :
                 Name = account.Name,
                 IsActive = account.IsActive,
                 SendingFacilityId = account.SendingFacilityId,
-                SendingAppId = account.SendingAppId,
+                SendingClientId = account.SendingClientId,
                 CreatedOn = account.CreatedOn
             };
 
@@ -57,7 +57,7 @@ public class ImpersonationAdminDataProvider :
             AccountId = account.AccountId,
             Name = account.Name,
             SendingFacilityId = account.SendingFacilityId,
-            SendingAppId = account.SendingAppId,
+            SendingClientId = account.SendingClientId,
             CreatedOn = DateTimeOffset.UtcNow,
             UpdatedOn = DateTimeOffset.UtcNow
         };
@@ -65,6 +65,93 @@ public class ImpersonationAdminDataProvider :
         _db.ImpersonatedAccounts.Add(entity);
         _db.SaveChanges();
 
+        return _db.Entry(entity).State == EntityState.Added;
+    }
+
+    public bool TryUpdateSendingClientId(Guid id, string sendingClientId, out ImpersonatedAccount account)
+    {
+        var entity = _db.ImpersonatedAccounts.Find(id);
+
+        if (entity is null || string.IsNullOrWhiteSpace(sendingClientId))
+        {
+            account = default!;
+            return false;
+        }
+
+        entity.SendingClientId = sendingClientId;
+        
+        _db.ImpersonatedAccounts.Add(entity);
+        _db.SaveChanges();
+
+        account = new ImpersonatedAccount
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            AccountId = entity.AccountId,
+            IsActive = entity.IsActive,
+            SendingFacilityId = entity.SendingFacilityId,
+            SendingClientId = entity.SendingClientId,
+            CreatedOn = entity.CreatedOn
+        };
+
+        return _db.Entry(entity).State == EntityState.Added;
+    }
+
+    public bool TryUpdateSendingFacilityId(Guid id, string sendingClientId, out ImpersonatedAccount account)
+    {
+        var entity = _db.ImpersonatedAccounts.Find(id);
+
+        if (entity is null || string.IsNullOrWhiteSpace(sendingClientId))
+        {
+            account = default!;
+            return false;
+        }
+
+        entity.SendingFacilityId = sendingClientId;
+        
+        _db.ImpersonatedAccounts.Add(entity);
+        _db.SaveChanges();
+
+        account = new ImpersonatedAccount
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            AccountId = entity.AccountId,
+            IsActive = entity.IsActive,
+            SendingFacilityId = entity.SendingFacilityId,
+            SendingClientId = entity.SendingClientId,
+            CreatedOn = entity.CreatedOn
+        };
+
+        return _db.Entry(entity).State == EntityState.Added;
+    }
+
+    public bool TryUpdateAccountName(Guid id, string name, out ImpersonatedAccount account)
+    {
+        var entity = _db.ImpersonatedAccounts.Find(id);
+
+        if (entity is null || string.IsNullOrWhiteSpace(name))
+        {
+            account = default!;
+            return false;
+        }
+        
+        entity.Name = name;
+        
+        _db.ImpersonatedAccounts.Add(entity);
+        _db.SaveChanges();
+
+        account = new ImpersonatedAccount
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            AccountId = entity.AccountId,
+            IsActive = entity.IsActive,
+            SendingFacilityId = entity.SendingFacilityId,
+            SendingClientId = entity.SendingClientId,
+            CreatedOn = entity.CreatedOn
+        };
+        
         return _db.Entry(entity).State == EntityState.Added;
     }
 
@@ -100,7 +187,7 @@ public class ImpersonationAdminDataProvider :
             Name = entity.Name,
             IsActive = entity.IsActive,
             SendingFacilityId = entity.SendingFacilityId,
-            SendingAppId = entity.SendingAppId,
+            SendingClientId = entity.SendingClientId,
             CreatedOn = entity.CreatedOn
         };
         

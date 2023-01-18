@@ -33,7 +33,7 @@ public class ImpersonatedAccountAdminService :
             Id = NewId.NextGuid(),
             Name = request.Name,
             SendingFacilityId = request.SendingFacilityId,
-            SendingAppId = request.SendingAppId,
+            SendingClientId = request.SendingClientId,
             AccountId = request.AccountId,
             IsActive = request.IsActive,
             CreatedOn = DateTimeOffset.UtcNow
@@ -41,7 +41,28 @@ public class ImpersonatedAccountAdminService :
 
         bool isCreated = _impersonationDataProvider.TryCreateAccount(account);
 
-        return new Result<ImpersonatedAccount> {Data = account, IsData = isCreated, HasFaulted = isCreated};
+        return new Result<ImpersonatedAccount> {Data = account, IsData = isCreated, HasFaulted = !isCreated};
+    }
+
+    public Result<ImpersonatedAccount> UpdateSendingClientId(Guid id, string sendingClientId)
+    {
+        bool isUpdated = _impersonationDataProvider.TryUpdateSendingClientId(id, sendingClientId, out ImpersonatedAccount account);
+
+        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+    }
+
+    public Result<ImpersonatedAccount> UpdateSendingFacilityId(Guid id, string sendingFacilityId)
+    {
+        bool isUpdated = _impersonationDataProvider.TryUpdateSendingFacilityId(id, sendingFacilityId, out ImpersonatedAccount account);
+
+        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+    }
+
+    public Result<ImpersonatedAccount> UpdateAccountName(Guid id, string name)
+    {
+        bool isUpdated = _impersonationDataProvider.TryUpdateAccountName(id, name, out ImpersonatedAccount account);
+
+        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
     public Result<ImpersonatedAccount> ActivateAccount(Guid id)
