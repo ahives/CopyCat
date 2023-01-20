@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CopyCat.Endpoint.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("admin/impersonation")]
 public class ImpersonationAdminController :
     ControllerBase
 {
@@ -17,7 +17,8 @@ public class ImpersonationAdminController :
         _service = service;
     }
 
-    [HttpPost(Name = "CreateImpersonatedAccount")]
+    [Route("create-account")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
     {
@@ -29,7 +30,8 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpPost(Name = "UpdateImpersonatedAccountName")]
+    [Route("update-account-name")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult UpdateImpersonatedAccountName(Guid id, string name)
     {
@@ -41,7 +43,8 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpPost(Name = "UpdateImpersonatedAccountSendingClientId")]
+    [Route("update-client-identifier")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult UpdateImpersonatedAccountSendingClientId(Guid id, string sendingClientId)
     {
@@ -53,7 +56,8 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpPost(Name = "UpdateImpersonatedAccountSendingFacilityId")]
+    [Route("update-facility-identifier")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult UpdateImpersonatedAccountSendingFacilityId(Guid id, string sendingFacilityId)
     {
@@ -65,7 +69,8 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpGet(Name = "GetImpersonatedAccounts")]
+    [Route("list-accounts")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
     public IActionResult GetImpersonatedAccounts(Guid accountId)
     {
@@ -77,7 +82,8 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpGet(Name = "GetAllImpersonatedAccounts")]
+    [Route("list-all-account")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
     public IActionResult GetAllImpersonatedAccounts()
     {
@@ -89,7 +95,8 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpPost(Name = "ActivateImpersonatedAccount")]
+    [Route("activate-account")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult ActivateImpersonatedAccount(Guid id)
     {
@@ -101,7 +108,8 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [HttpPost(Name = "DeactivateImpersonatedAccount")]
+    [Route("deactivate-account")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public IActionResult DeactivateImpersonatedAccount(Guid id)
     {

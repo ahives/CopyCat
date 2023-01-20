@@ -12,4 +12,6 @@ public interface IAccountAdminService
     Result<Account> ActivateAccount(Guid id);
 
     Result<Account> DeactivateAccount(Guid id);
+    
+    Result<Account> UpdateAccountName(Guid id, string name);
 }

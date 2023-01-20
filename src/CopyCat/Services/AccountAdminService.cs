@@ -50,7 +50,14 @@ public class AccountAdminService :
 
     public Result<Account> DeactivateAccount(Guid id)
     {
-        bool isUpdated = _dataProvider.TryDeactivateAccount(id, out Account account, out IReadOnlyList<ImpersonatedAccount> impersonatedAccounts);
+        bool isUpdated = _dataProvider.TryDeactivateAccount(id, out Account account);
+
+        return new Result<Account> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+    }
+
+    public Result<Account> UpdateAccountName(Guid id, string name)
+    {
+        bool isUpdated = _dataProvider.TryUpdateAccountName(id, name, out Account account);
 
         return new Result<Account> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
     }

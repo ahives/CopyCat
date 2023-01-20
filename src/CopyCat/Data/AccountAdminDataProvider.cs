@@ -47,6 +47,26 @@ public class AccountAdminDataProvider :
         return _db.Entry(entity).State == EntityState.Added;
     }
 
+    public bool TryUpdateAccountName(Guid id, string name, out Account account)
+    {
+        var entity = _db.Accounts.Find(id);
+
+        if (entity is null)
+        {
+            account = default!;
+            return false;
+        }
+
+        entity.Name = name;
+
+        _db.Accounts.Update(entity);
+        _db.SaveChanges();
+
+        account = entity.MapTo();
+        
+        return _db.Entry(entity).State == EntityState.Modified;
+    }
+
     public bool FindAccount(Guid accountId)
     {
         var account = _db.Accounts.Find(accountId);
@@ -74,14 +94,13 @@ public class AccountAdminDataProvider :
         return _db.Entry(entity).State == EntityState.Modified;
     }
 
-    public bool TryDeactivateAccount(Guid id, out Account account, out IReadOnlyList<ImpersonatedAccount> impersonatedAccounts)
+    public bool TryDeactivateAccount(Guid id, out Account account)
     {
         var entity = _db.Accounts.Find(id);
 
         if (entity is null)
         {
             account = default!;
-            impersonatedAccounts = new List<ImpersonatedAccount>();
             return false;
         }
 
@@ -89,20 +108,8 @@ public class AccountAdminDataProvider :
 
         _db.Accounts.Update(entity);
 
-        var impersonated = UpdateImpersonatedAccounts(entity.Id);
-
-        _db.SaveChanges();
-
-        account = entity.MapTo();
-        impersonatedAccounts = impersonated.MapTo();
-        
-        return _db.Entry(entity).State == EntityState.Modified;
-    }
-
-    List<ImpersonatedAccountEntity> UpdateImpersonatedAccounts(Guid accountId)
-    {
         var impersonated = (from acct in _db.ImpersonatedAccounts
-                where acct.AccountId == accountId
+                where acct.AccountId == entity.Id
                 select acct)
             .ToList();
 
@@ -112,6 +119,10 @@ public class AccountAdminDataProvider :
             _db.ImpersonatedAccounts.Update(impersonated[i]);
         }
 
-        return impersonated;
+        _db.SaveChanges();
+
+        account = entity.MapTo();
+        
+        return _db.Entry(entity).State == EntityState.Modified;
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CopyCat.Endpoint.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("admin/account")]
 public class AccountAdminController :
     ControllerBase
 {
@@ -17,7 +17,8 @@ public class AccountAdminController :
         _service = service;
     }
 
-    [HttpGet(Name = "GetAccounts")]
+    [Route("list-accounts")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<Account>))]
     public IActionResult GetAccounts()
     {
@@ -26,7 +27,8 @@ public class AccountAdminController :
         return Ok(result.Data);
     }
 
-    [HttpPost(Name = "CreateAccount")]
+    [Route("create-account")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult CreateAccount(CreateAccountRequest request)
     {
@@ -38,7 +40,8 @@ public class AccountAdminController :
         return BadRequest();
     }
 
-    [HttpPost(Name = "ActivateAccount")]
+    [Route("activate-account")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
     public IActionResult ActivateAccount(Guid id)
     {
@@ -50,11 +53,25 @@ public class AccountAdminController :
         return BadRequest();
     }
 
-    [HttpPost(Name = "DeactivateAccount")]
+    [Route("deactivate-account")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
     public IActionResult DeactivateAccount(Guid id)
     {
         var result = _service.DeactivateAccount(id);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [Route("update-account")]
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
+    public IActionResult UpdateAccountName(Guid id, string name)
+    {
+        var result = _service.UpdateAccountName(id, name);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
