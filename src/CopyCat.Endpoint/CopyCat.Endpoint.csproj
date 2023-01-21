@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CopyCat.DependencyInjection\CopyCat.DependencyInjection.csproj" />
       <ProjectReference Include="..\CopyCat\CopyCat.csproj" />
     </ItemGroup>
 

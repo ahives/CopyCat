@@ -20,7 +20,7 @@ public class ImpersonationAdminController :
     [Route("create-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public async Task<IActionResult> CreateImpersonatedAccount(ImpersonatedAccountCreationRequest request)
+    public async Task<IActionResult> CreateImpersonatedAccount([FromBody] ImpersonatedAccountCreationRequest request)
     {
         var result = await _service.CreateAccount(request);
 
@@ -97,7 +97,7 @@ public class ImpersonationAdminController :
 
     [Route("get-account")]
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
     public async Task<IActionResult> GetAccount(Guid id)
     {
         var result = await _service.GetAccount(id);

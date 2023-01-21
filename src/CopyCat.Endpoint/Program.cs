@@ -1,24 +1,10 @@
-using CopyCat.Data;
-using CopyCat.Services;
-using Microsoft.EntityFrameworkCore;
+using CopyCat.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<ImpersonationDbContext>();
-
-IConfiguration configuration = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json")
-    .Build();
-
-builder.Services.AddDbContext<ImpersonationDbContext>(x =>
-    x.UseNpgsql(configuration.GetConnectionString("ImpersonationDbConnection")));
-
-builder.Services.AddScoped<IImpersonationAdminDataProvider, ImpersonationAdminDataProvider>();
-builder.Services.AddScoped<IAccountAdminDataProvider, AccountAdminDataProvider>();
-builder.Services.AddScoped<IAccountAdminService, AccountAdminService>();
-builder.Services.AddScoped<IImpersonatedAccountAdminService, ImpersonatedAccountAdminService>();
+builder.Services.AddCopyCat();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

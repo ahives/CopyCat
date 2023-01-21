@@ -43,7 +43,7 @@ public class AccountAdminController :
     [Route("create-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateAccount(AccountCreationRequest request)
+    public async Task<IActionResult> CreateAccount([FromBody] AccountCreationRequest request)
     {
         var result = await _service.CreateAccount(request);
 

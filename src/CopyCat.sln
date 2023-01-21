@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DB89F1F6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopyCat.Tests", "CopyCat.Tests\CopyCat.Tests.csproj", "{CBF14784-1463-49DB-AF7B-A9E023DEBC5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopyCat.DependencyInjection", "CopyCat.DependencyInjection\CopyCat.DependencyInjection.csproj", "{2BD6C03F-01FD-4AB2-B41A-4220D0290982}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{CBF14784-1463-49DB-AF7B-A9E023DEBC5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBF14784-1463-49DB-AF7B-A9E023DEBC5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF14784-1463-49DB-AF7B-A9E023DEBC5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BD6C03F-01FD-4AB2-B41A-4220D0290982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BD6C03F-01FD-4AB2-B41A-4220D0290982}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BD6C03F-01FD-4AB2-B41A-4220D0290982}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BD6C03F-01FD-4AB2-B41A-4220D0290982}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CBF14784-1463-49DB-AF7B-A9E023DEBC5F} = {DB89F1F6-1F81-4BDA-9C60-F4A667C640A3}
