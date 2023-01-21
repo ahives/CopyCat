@@ -1,5 +1,4 @@
 using CopyCat.Data.Model;
-using CopyCat.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CopyCat.Data;
@@ -14,7 +13,7 @@ public class ImpersonationAdminDataProvider :
         _db = db;
     }
 
-    public List<ImpersonatedAccount> GetAccounts(Guid accountId)
+    public async Task<IReadOnlyList<ImpersonatedAccount>> GetAccounts(Guid accountId)
     {
         var accounts = from account in _db.ImpersonatedAccounts
             where account.AccountId == accountId
@@ -29,10 +28,15 @@ public class ImpersonationAdminDataProvider :
                 CreatedOn = account.CreatedOn
             };
 
-        return accounts.ToList();
+        return await accounts.ToListAsync();
     }
 
-    public List<ImpersonatedAccount> GetAllAccounts()
+    public async Task<ImpersonatedAccountEntity?> GetAccount(Guid id)
+    {
+        return await _db.ImpersonatedAccounts.FindAsync(id);
+    }
+
+    public async Task<IReadOnlyList<ImpersonatedAccount>> GetAllAccounts()
     {
         var accounts = from account in _db.ImpersonatedAccounts
             where account.IsDeleted == false
@@ -47,10 +51,10 @@ public class ImpersonationAdminDataProvider :
                 CreatedOn = account.CreatedOn
             };
 
-        return accounts.ToList();
+        return await accounts.ToListAsync();
     }
 
-    public bool TryCreateAccount(ImpersonatedAccount account)
+    public async Task<bool> TryCreateAccount(ImpersonatedAccount account)
     {
         var entity = new ImpersonatedAccountEntity
         {
@@ -64,125 +68,70 @@ public class ImpersonationAdminDataProvider :
         };
 
         _db.ImpersonatedAccounts.Add(entity);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return _db.Entry(entity).State == EntityState.Added;
     }
 
-    public bool TryUpdateSendingClientId(Guid id, string sendingClientId, out ImpersonatedAccount account)
+    public async Task<bool> TryUpdateSendingClientId(ImpersonatedAccountEntity account, string sendingClientId)
     {
-        var entity = _db.ImpersonatedAccounts.Find(id);
-
-        if (entity is null || string.IsNullOrWhiteSpace(sendingClientId))
-        {
-            account = default!;
+        if (account is null || string.IsNullOrWhiteSpace(sendingClientId))
             return false;
-        }
 
-        entity.SendingClientId = sendingClientId;
+        account.SendingClientId = sendingClientId;
         
-        _db.ImpersonatedAccounts.Add(entity);
-        _db.SaveChanges();
+        _db.ImpersonatedAccounts.Add(account);
+        await _db.SaveChangesAsync();
 
-        account = new ImpersonatedAccount
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            AccountId = entity.AccountId,
-            IsActive = entity.IsActive,
-            SendingFacilityId = entity.SendingFacilityId,
-            SendingClientId = entity.SendingClientId,
-            CreatedOn = entity.CreatedOn
-        };
-
-        return _db.Entry(entity).State == EntityState.Added;
+        return _db.Entry(account).State == EntityState.Added;
     }
 
-    public bool TryUpdateSendingFacilityId(Guid id, string sendingClientId, out ImpersonatedAccount account)
+    public async Task<bool> TryUpdateSendingFacilityId(ImpersonatedAccountEntity account, string sendingClientId)
     {
-        var entity = _db.ImpersonatedAccounts.Find(id);
-
-        if (entity is null || string.IsNullOrWhiteSpace(sendingClientId))
-        {
-            account = default!;
+        if (account is null || string.IsNullOrWhiteSpace(sendingClientId))
             return false;
-        }
 
-        entity.SendingFacilityId = sendingClientId;
+        account.SendingFacilityId = sendingClientId;
         
-        _db.ImpersonatedAccounts.Add(entity);
-        _db.SaveChanges();
+        _db.ImpersonatedAccounts.Add(account);
+        await _db.SaveChangesAsync();
 
-        account = new ImpersonatedAccount
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            AccountId = entity.AccountId,
-            IsActive = entity.IsActive,
-            SendingFacilityId = entity.SendingFacilityId,
-            SendingClientId = entity.SendingClientId,
-            CreatedOn = entity.CreatedOn
-        };
-
-        return _db.Entry(entity).State == EntityState.Added;
+        return _db.Entry(account).State == EntityState.Added;
     }
 
-    public bool TryUpdateAccountName(Guid id, string name, out ImpersonatedAccount account)
+    public async Task<bool> TryUpdateAccountName(ImpersonatedAccountEntity account, string name)
     {
-        var entity = _db.ImpersonatedAccounts.Find(id);
-
-        if (entity is null || string.IsNullOrWhiteSpace(name))
-        {
-            account = default!;
+        if (account is null || string.IsNullOrWhiteSpace(name))
             return false;
-        }
-        
-        entity.Name = name;
-        
-        _db.ImpersonatedAccounts.Add(entity);
-        _db.SaveChanges();
 
-        account = new ImpersonatedAccount
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            AccountId = entity.AccountId,
-            IsActive = entity.IsActive,
-            SendingFacilityId = entity.SendingFacilityId,
-            SendingClientId = entity.SendingClientId,
-            CreatedOn = entity.CreatedOn
-        };
+        account.Name = name;
         
-        return _db.Entry(entity).State == EntityState.Added;
+        _db.ImpersonatedAccounts.Add(account);
+        await _db.SaveChangesAsync();
+        
+        return _db.Entry(account).State == EntityState.Added;
     }
 
-    public bool TryActivateAccount(Guid id, out ImpersonatedAccount account)
+    public async Task<bool> TryActivateAccount(ImpersonatedAccountEntity account)
     {
-        return SetIsActiveAccount(id, true, out account);
+        return await SetIsActiveAccount(true, account);
     }
 
-    public bool TryDeactivateAccount(Guid id, out ImpersonatedAccount account)
+    public async Task<bool> TryDeactivateAccount(ImpersonatedAccountEntity account)
     {
-        return SetIsActiveAccount(id, false, out account);
+        return await SetIsActiveAccount(false, account);
     }
 
-    bool SetIsActiveAccount(Guid id, bool isActive, out ImpersonatedAccount account)
+    async Task<bool> SetIsActiveAccount(bool isActive, ImpersonatedAccountEntity account)
     {
-        var entity = _db.ImpersonatedAccounts.Find(id);
-
-        if (entity is null)
-        {
-            account = default!;
+        if (account is null)
             return false;
-        }
 
-        entity.IsActive = isActive;
+        account.IsActive = isActive;
 
-        _db.ImpersonatedAccounts.Update(entity);
-        _db.SaveChanges();
-
-        account = entity.MapTo();
+        _db.ImpersonatedAccounts.Update(account);
+        await _db.SaveChangesAsync();
         
-        return _db.Entry(entity).State == EntityState.Modified;
+        return _db.Entry(account).State == EntityState.Modified;
     }
 }

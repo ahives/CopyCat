@@ -4,19 +4,21 @@ namespace CopyCat.Data;
 
 public interface IImpersonationAdminDataProvider
 {
-    List<ImpersonatedAccount> GetAccounts(Guid accountId);
+    Task<IReadOnlyList<ImpersonatedAccount>> GetAccounts(Guid accountId);
 
-    List<ImpersonatedAccount> GetAllAccounts();
+    Task<ImpersonatedAccountEntity?> GetAccount(Guid id);
 
-    bool TryCreateAccount(ImpersonatedAccount account);
+    Task<IReadOnlyList<ImpersonatedAccount>> GetAllAccounts();
 
-    bool TryUpdateSendingClientId(Guid id, string sendingClientId, out ImpersonatedAccount account);
+    Task<bool> TryCreateAccount(ImpersonatedAccount account);
 
-    bool TryUpdateSendingFacilityId(Guid id, string sendingClientId, out ImpersonatedAccount account);
+    Task<bool> TryUpdateSendingClientId(ImpersonatedAccountEntity account, string sendingClientId);
 
-    bool TryUpdateAccountName(Guid id, string name, out ImpersonatedAccount account);
+    Task<bool> TryUpdateSendingFacilityId(ImpersonatedAccountEntity account, string sendingClientId);
 
-    bool TryActivateAccount(Guid id, out ImpersonatedAccount account);
+    Task<bool> TryUpdateAccountName(ImpersonatedAccountEntity account, string name);
 
-    bool TryDeactivateAccount(Guid id, out ImpersonatedAccount account);
+    Task<bool> TryActivateAccount(ImpersonatedAccountEntity account);
+
+    Task<bool> TryDeactivateAccount(ImpersonatedAccountEntity account);
 }

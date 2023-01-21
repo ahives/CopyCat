@@ -20,9 +20,9 @@ public class ImpersonationAdminController :
     [Route("create-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public IActionResult CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
+    public async Task<IActionResult> CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
     {
-        var result = _service.CreateAccount(request);
+        var result = await _service.CreateAccount(request);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -33,9 +33,9 @@ public class ImpersonationAdminController :
     [Route("update-account-name")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public IActionResult UpdateImpersonatedAccountName(Guid id, string name)
+    public async Task<IActionResult> UpdateImpersonatedAccountName(Guid id, string name)
     {
-        var result = _service.UpdateAccountName(id, name);
+        var result = await _service.UpdateAccountName(id, name);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -46,9 +46,9 @@ public class ImpersonationAdminController :
     [Route("update-client-identifier")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public IActionResult UpdateImpersonatedAccountSendingClientId(Guid id, string sendingClientId)
+    public async Task<IActionResult> UpdateImpersonatedAccountSendingClientId(Guid id, string sendingClientId)
     {
-        var result = _service.UpdateSendingClientId(id, sendingClientId);
+        var result = await _service.UpdateSendingClientId(id, sendingClientId);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -59,9 +59,9 @@ public class ImpersonationAdminController :
     [Route("update-facility-identifier")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public IActionResult UpdateImpersonatedAccountSendingFacilityId(Guid id, string sendingFacilityId)
+    public async Task<IActionResult> UpdateImpersonatedAccountSendingFacilityId(Guid id, string sendingFacilityId)
     {
-        var result = _service.UpdateSendingFacilityId(id, sendingFacilityId);
+        var result = await _service.UpdateSendingFacilityId(id, sendingFacilityId);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -72,9 +72,9 @@ public class ImpersonationAdminController :
     [Route("list-accounts")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
-    public IActionResult GetImpersonatedAccounts(Guid accountId)
+    public async Task<IActionResult> GetImpersonatedAccounts(Guid accountId)
     {
-        var result = _service.GetAccounts(accountId);
+        var result = await _service.GetAccounts(accountId);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -82,12 +82,12 @@ public class ImpersonationAdminController :
         return BadRequest();
     }
 
-    [Route("list-all-account")]
+    [Route("list-all-accounts")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
-    public IActionResult GetAllImpersonatedAccounts()
+    public async Task<IActionResult> GetAllImpersonatedAccounts()
     {
-        var result = _service.GetAllAccounts();
+        var result = await _service.GetAllAccounts();
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -98,9 +98,9 @@ public class ImpersonationAdminController :
     [Route("activate-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public IActionResult ActivateImpersonatedAccount(Guid id)
+    public async Task<IActionResult> ActivateImpersonatedAccount(Guid id)
     {
-        var result = _service.ActivateAccount(id);
+        var result = await _service.ActivateAccount(id);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -111,9 +111,9 @@ public class ImpersonationAdminController :
     [Route("deactivate-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public IActionResult DeactivateImpersonatedAccount(Guid id)
+    public async Task<IActionResult> DeactivateImpersonatedAccount(Guid id)
     {
-        var result = _service.DeactivateAccount(id);
+        var result = await _service.DeactivateAccount(id);
 
         if (!result.HasFaulted)
             return Ok(result.Data);

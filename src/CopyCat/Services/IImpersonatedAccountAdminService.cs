@@ -5,19 +5,21 @@ namespace CopyCat.Services;
 
 public interface IImpersonatedAccountAdminService
 {
-    Result<ImpersonatedAccount> CreateAccount(CreateImpersonatedAccountRequest request);
+    Task<Result<ImpersonatedAccount>> CreateAccount(CreateImpersonatedAccountRequest request);
 
-    Result<ImpersonatedAccount> UpdateSendingClientId(Guid id, string sendingClientId);
+    Task<Result<ImpersonatedAccount>> UpdateSendingClientId(Guid id, string sendingClientId);
 
-    Result<ImpersonatedAccount> UpdateSendingFacilityId(Guid id, string sendingFacilityId);
+    Task<Result<ImpersonatedAccount>> UpdateSendingFacilityId(Guid id, string sendingFacilityId);
 
-    Result<ImpersonatedAccount> UpdateAccountName(Guid id, string name);
+    Task<Result<ImpersonatedAccount>> UpdateAccountName(Guid id, string name);
 
-    Result<ImpersonatedAccount> ActivateAccount(Guid id);
+    Task<Result<ImpersonatedAccount>> ActivateAccount(Guid id);
 
-    Result<ImpersonatedAccount> DeactivateAccount(Guid id);
+    Task<Result<ImpersonatedAccount>> DeactivateAccount(Guid id);
 
-    Result<IReadOnlyList<ImpersonatedAccount>> GetAllAccounts();
+    Task<Result<IReadOnlyList<ImpersonatedAccount>>> GetAllAccounts();
 
-    Result<IReadOnlyList<ImpersonatedAccount>> GetAccounts(Guid id);
+    Task<Result<IReadOnlyList<ImpersonatedAccount>>> GetAccounts(Guid id);
+
+    Task<Result<ImpersonatedAccount>> FindAccount(Guid id);
 }

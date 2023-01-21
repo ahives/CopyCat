@@ -20,7 +20,7 @@ public class ImpersonatedAccountAdminService :
         _accountDataProvider = accountDataProvider;
     }
 
-    public Result<ImpersonatedAccount> CreateAccount(CreateImpersonatedAccountRequest request)
+    public async Task<Result<ImpersonatedAccount>> CreateAccount(CreateImpersonatedAccountRequest request)
     {
         if (!request.IsValid())
             return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
@@ -39,57 +39,87 @@ public class ImpersonatedAccountAdminService :
             CreatedOn = DateTimeOffset.UtcNow
         };
 
-        bool isCreated = _impersonationDataProvider.TryCreateAccount(account);
+        bool isCreated = await _impersonationDataProvider.TryCreateAccount(account);
 
         return new Result<ImpersonatedAccount> {Data = account, IsData = isCreated, HasFaulted = !isCreated};
     }
 
-    public Result<ImpersonatedAccount> UpdateSendingClientId(Guid id, string sendingClientId)
+    public async Task<Result<ImpersonatedAccount>> UpdateSendingClientId(Guid id, string sendingClientId)
     {
-        bool isUpdated = _impersonationDataProvider.TryUpdateSendingClientId(id, sendingClientId, out ImpersonatedAccount account);
+        var entity = await _impersonationDataProvider.GetAccount(id);
 
-        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _impersonationDataProvider.TryUpdateSendingClientId(entity, sendingClientId);
+
+        return new Result<ImpersonatedAccount> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
-    public Result<ImpersonatedAccount> UpdateSendingFacilityId(Guid id, string sendingFacilityId)
+    public async Task<Result<ImpersonatedAccount>> UpdateSendingFacilityId(Guid id, string sendingFacilityId)
     {
-        bool isUpdated = _impersonationDataProvider.TryUpdateSendingFacilityId(id, sendingFacilityId, out ImpersonatedAccount account);
+        var entity = await _impersonationDataProvider.GetAccount(id);
 
-        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _impersonationDataProvider.TryUpdateSendingFacilityId(entity, sendingFacilityId);
+
+        return new Result<ImpersonatedAccount> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
-    public Result<ImpersonatedAccount> UpdateAccountName(Guid id, string name)
+    public async Task<Result<ImpersonatedAccount>> UpdateAccountName(Guid id, string name)
     {
-        bool isUpdated = _impersonationDataProvider.TryUpdateAccountName(id, name, out ImpersonatedAccount account);
+        var entity = await _impersonationDataProvider.GetAccount(id);
 
-        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _impersonationDataProvider.TryUpdateAccountName(entity, name);
+        
+        return new Result<ImpersonatedAccount> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
-    public Result<ImpersonatedAccount> ActivateAccount(Guid id)
+    public async Task<Result<ImpersonatedAccount>> ActivateAccount(Guid id)
     {
-        bool isUpdated = _impersonationDataProvider.TryActivateAccount(id, out ImpersonatedAccount account);
+        var entity = await _impersonationDataProvider.GetAccount(id);
 
-        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _impersonationDataProvider.TryActivateAccount(entity);
+
+        return new Result<ImpersonatedAccount> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
-    public Result<ImpersonatedAccount> DeactivateAccount(Guid id)
+    public async Task<Result<ImpersonatedAccount>> DeactivateAccount(Guid id)
     {
-        bool isUpdated = _impersonationDataProvider.TryDeactivateAccount(id, out ImpersonatedAccount account);
+        var entity = await _impersonationDataProvider.GetAccount(id);
 
-        return new Result<ImpersonatedAccount> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _impersonationDataProvider.TryDeactivateAccount(entity);
+
+        return new Result<ImpersonatedAccount> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
-    public Result<IReadOnlyList<ImpersonatedAccount>> GetAllAccounts()
+    public async Task<Result<IReadOnlyList<ImpersonatedAccount>>> GetAllAccounts()
     {
-        var data = _impersonationDataProvider.GetAllAccounts();
+        var data = await _impersonationDataProvider.GetAllAccounts();
         
         return new Result<IReadOnlyList<ImpersonatedAccount>> {Data = data, IsData = data.Any(), HasFaulted = false};
     }
 
-    public Result<IReadOnlyList<ImpersonatedAccount>> GetAccounts(Guid id)
+    public async Task<Result<IReadOnlyList<ImpersonatedAccount>>> GetAccounts(Guid id)
     {
-        var data = _impersonationDataProvider.GetAccounts(id);
+        var data = await _impersonationDataProvider.GetAccounts(id);
         
         return new Result<IReadOnlyList<ImpersonatedAccount>> {Data = data, IsData = data.Any(), HasFaulted = false};
+    }
+
+    public Task<Result<ImpersonatedAccount>> FindAccount(Guid id)
+    {
+        throw new NotImplementedException();
     }
 }
