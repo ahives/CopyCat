@@ -20,19 +20,32 @@ public class AccountAdminController :
     [Route("list-accounts")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<Account>))]
-    public IActionResult GetAccounts()
+    public async Task<IActionResult> GetAccounts()
     {
-        var result = _service.GetAllAccounts();
+        var result = await _service.GetAllAccounts();
         
         return Ok(result.Data);
+    }
+
+    [Route("get-account")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
+    public async Task<IActionResult> GetAccount(Guid id)
+    {
+        var result = await _service.GetAccount(id);
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
     }
 
     [Route("create-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult CreateAccount(CreateAccountRequest request)
+    public async Task<IActionResult> CreateAccount(AccountCreationRequest request)
     {
-        var result = _service.CreateAccount(request);
+        var result = await _service.CreateAccount(request);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -43,9 +56,9 @@ public class AccountAdminController :
     [Route("activate-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
-    public IActionResult ActivateAccount(Guid id)
+    public async Task<IActionResult> ActivateAccount(Guid id)
     {
-        var result = _service.ActivateAccount(id);
+        var result = await _service.ActivateAccount(id);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -56,9 +69,9 @@ public class AccountAdminController :
     [Route("deactivate-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
-    public IActionResult DeactivateAccount(Guid id)
+    public async Task<IActionResult> DeactivateAccount(Guid id)
     {
-        var result = _service.DeactivateAccount(id);
+        var result = await _service.DeactivateAccount(id);
 
         if (!result.HasFaulted)
             return Ok(result.Data);
@@ -69,9 +82,9 @@ public class AccountAdminController :
     [Route("update-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Account))]
-    public IActionResult UpdateAccountName(Guid id, string name)
+    public async Task<IActionResult> UpdateAccountName(Guid id, string name)
     {
-        var result = _service.UpdateAccountName(id, name);
+        var result = await _service.UpdateAccountName(id, name);
 
         if (!result.HasFaulted)
             return Ok(result.Data);

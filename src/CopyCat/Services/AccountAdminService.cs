@@ -16,14 +16,23 @@ public class AccountAdminService :
         _dataProvider = dataProvider;
     }
 
-    public Result<IReadOnlyList<Account>> GetAllAccounts()
+    public async Task<Result<IReadOnlyList<Account>>> GetAllAccounts()
     {
-        var data = _dataProvider.GetAllAccounts();
+        var data = await _dataProvider.GetAllAccounts();
         
         return new Result<IReadOnlyList<Account>> {Data = data, IsData = data.Any(), HasFaulted = false};
     }
 
-    public Result<Account> CreateAccount(CreateAccountRequest request)
+    public async Task<Result<Account>> GetAccount(Guid id)
+    {
+        var account = await _dataProvider.GetAccount(id);
+
+        return account is null
+            ? new Result<Account> {IsData = false, HasFaulted = true}
+            : new Result<Account> {Data = account.MapTo(), IsData = true, HasFaulted = false};
+    }
+
+    public async Task<Result<Account>> CreateAccount(AccountCreationRequest request)
     {
         if (!request.IsValid())
             return new Result<Account> {IsData = false, HasFaulted = true};
@@ -36,29 +45,44 @@ public class AccountAdminService :
             CreatedOn = DateTimeOffset.UtcNow
         };
         
-        bool isCreated = _dataProvider.TryCreateAccount(account);
+        bool isCreated = await _dataProvider.TryCreateAccount(account);
 
         return new Result<Account> {Data = account, HasFaulted = !isCreated, IsData = isCreated};
     }
 
-    public Result<Account> ActivateAccount(Guid id)
+    public async Task<Result<Account>> ActivateAccount(Guid id)
     {
-        bool isUpdated = _dataProvider.TryActivateAccount(id, out Account account);
+        var entity = await _dataProvider.GetAccount(id);
 
-        return new Result<Account> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<Account> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _dataProvider.TryActivateAccount(entity);
+
+        return new Result<Account> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
-    public Result<Account> DeactivateAccount(Guid id)
+    public async Task<Result<Account>> DeactivateAccount(Guid id)
     {
-        bool isUpdated = _dataProvider.TryDeactivateAccount(id, out Account account);
+        var entity = await _dataProvider.GetAccount(id);
 
-        return new Result<Account> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<Account> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _dataProvider.TryDeactivateAccount(entity);
+
+        return new Result<Account> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 
-    public Result<Account> UpdateAccountName(Guid id, string name)
+    public async Task<Result<Account>> UpdateAccountName(Guid id, string name)
     {
-        bool isUpdated = _dataProvider.TryUpdateAccountName(id, name, out Account account);
+        var entity = await _dataProvider.GetAccount(id);
 
-        return new Result<Account> {Data = account, IsData = isUpdated, HasFaulted = !isUpdated};
+        if (entity is null)
+            return new Result<Account> {IsData = false, HasFaulted = true};
+        
+        bool isUpdated = await _dataProvider.TryUpdateAccountName(entity, name);
+
+        return new Result<Account> {Data = entity.MapTo(), IsData = isUpdated, HasFaulted = !isUpdated};
     }
 }

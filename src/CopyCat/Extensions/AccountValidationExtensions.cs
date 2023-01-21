@@ -5,7 +5,7 @@ namespace CopyCat.Extensions;
 
 public static class AccountValidationExtensions
 {
-    public static bool IsValid(this CreateAccountRequest request)
+    public static bool IsValid(this AccountCreationRequest request)
     {
         if (request is null)
             return false;

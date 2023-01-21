@@ -20,7 +20,7 @@ public class ImpersonationAdminController :
     [Route("create-account")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImpersonatedAccount))]
-    public async Task<IActionResult> CreateImpersonatedAccount(CreateImpersonatedAccountRequest request)
+    public async Task<IActionResult> CreateImpersonatedAccount(ImpersonatedAccountCreationRequest request)
     {
         var result = await _service.CreateAccount(request);
 
@@ -88,6 +88,19 @@ public class ImpersonationAdminController :
     public async Task<IActionResult> GetAllImpersonatedAccounts()
     {
         var result = await _service.GetAllAccounts();
+
+        if (!result.HasFaulted)
+            return Ok(result.Data);
+
+        return BadRequest();
+    }
+
+    [Route("get-account")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IReadOnlyList<ImpersonatedAccount>))]
+    public async Task<IActionResult> GetAccount(Guid id)
+    {
+        var result = await _service.GetAccount(id);
 
         if (!result.HasFaulted)
             return Ok(result.Data);

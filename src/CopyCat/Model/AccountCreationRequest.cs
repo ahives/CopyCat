@@ -1,6 +1,6 @@
 namespace CopyCat.Model;
 
-public record CreateAccountRequest
+public record AccountCreationRequest
 {
     public string Name { get; set; }
     

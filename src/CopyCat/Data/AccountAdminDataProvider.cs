@@ -1,5 +1,4 @@
 using CopyCat.Data.Model;
-using CopyCat.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CopyCat.Data;
@@ -14,7 +13,7 @@ public class AccountAdminDataProvider :
         _db = db;
     }
 
-    public List<Account> GetAllAccounts()
+    public async Task<IReadOnlyList<Account>> GetAllAccounts()
     {
         var accounts = from account in _db.Accounts
             where account.IsDeleted == false
@@ -26,10 +25,10 @@ public class AccountAdminDataProvider :
                 CreatedOn = account.CreatedOn
             };
 
-        return accounts.ToList();
+        return await accounts.ToListAsync();
     }
 
-    public bool TryCreateAccount(Account account)
+    public async Task<bool> TryCreateAccount(Account account)
     {
         var entity = new AccountEntity
         {
@@ -42,74 +41,53 @@ public class AccountAdminDataProvider :
         };
         
         _db.Accounts.Add(entity);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return _db.Entry(entity).State == EntityState.Added;
     }
 
-    public bool TryUpdateAccountName(Guid id, string name, out Account account)
+    public async Task<bool> TryUpdateAccountName(AccountEntity account, string name)
     {
-        var entity = _db.Accounts.Find(id);
-
-        if (entity is null)
-        {
-            account = default!;
+        if (account is null)
             return false;
-        }
 
-        entity.Name = name;
+        account.Name = name;
 
-        _db.Accounts.Update(entity);
-        _db.SaveChanges();
-
-        account = entity.MapTo();
+        _db.Accounts.Update(account);
+        await _db.SaveChangesAsync();
         
-        return _db.Entry(entity).State == EntityState.Modified;
+        return _db.Entry(account).State == EntityState.Modified;
     }
 
-    public bool FindAccount(Guid accountId)
+    public async Task<AccountEntity?> GetAccount(Guid accountId)
     {
-        var account = _db.Accounts.Find(accountId);
-
-        return account is not null;
+        return await _db.Accounts.FindAsync(accountId);
     }
 
-    public bool TryActivateAccount(Guid id, out Account account)
+    public async Task<bool> TryActivateAccount(AccountEntity account)
     {
-        var entity = _db.Accounts.Find(id);
-
-        if (entity is null)
-        {
-            account = default!;
+        if (account is null)
             return false;
-        }
 
-        entity.IsActive = true;
+        account.IsActive = true;
 
-        _db.Accounts.Update(entity);
-        _db.SaveChanges();
-
-        account = entity.MapTo();
+        _db.Accounts.Update(account);
+        await _db.SaveChangesAsync();
         
-        return _db.Entry(entity).State == EntityState.Modified;
+        return _db.Entry(account).State == EntityState.Modified;
     }
 
-    public bool TryDeactivateAccount(Guid id, out Account account)
+    public async Task<bool> TryDeactivateAccount(AccountEntity account)
     {
-        var entity = _db.Accounts.Find(id);
-
-        if (entity is null)
-        {
-            account = default!;
+        if (account is null)
             return false;
-        }
 
-        entity.IsActive = false;
+        account.IsActive = false;
 
-        _db.Accounts.Update(entity);
+        _db.Accounts.Update(account);
 
         var impersonated = (from acct in _db.ImpersonatedAccounts
-                where acct.AccountId == entity.Id
+                where acct.AccountId == account.Id
                 select acct)
             .ToList();
 
@@ -119,10 +97,8 @@ public class AccountAdminDataProvider :
             _db.ImpersonatedAccounts.Update(impersonated[i]);
         }
 
-        _db.SaveChanges();
-
-        account = entity.MapTo();
+        await _db.SaveChangesAsync();
         
-        return _db.Entry(entity).State == EntityState.Modified;
+        return _db.Entry(account).State == EntityState.Modified;
     }
 }

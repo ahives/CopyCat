@@ -4,15 +4,15 @@ namespace CopyCat.Data;
 
 public interface IAccountAdminDataProvider
 {
-    List<Account> GetAllAccounts();
+    Task<IReadOnlyList<Account>> GetAllAccounts();
 
-    bool TryCreateAccount(Account account);
+    Task<bool> TryCreateAccount(Account account);
 
-    bool TryUpdateAccountName(Guid id, string name, out Account account);
+    Task<bool> TryUpdateAccountName(AccountEntity account, string name);
 
-    bool FindAccount(Guid accountId);
+    Task<AccountEntity?> GetAccount(Guid accountId);
 
-    bool TryActivateAccount(Guid id, out Account account);
+    Task<bool> TryActivateAccount(AccountEntity account);
 
-    bool TryDeactivateAccount(Guid id, out Account account);
+    Task<bool> TryDeactivateAccount(AccountEntity account);
 }

@@ -5,13 +5,15 @@ namespace CopyCat.Services;
 
 public interface IAccountAdminService
 {
-    Result<IReadOnlyList<Account>> GetAllAccounts();
+    Task<Result<IReadOnlyList<Account>>> GetAllAccounts();
 
-    Result<Account> CreateAccount(CreateAccountRequest request);
+    Task<Result<Account>> GetAccount(Guid id);
 
-    Result<Account> ActivateAccount(Guid id);
+    Task<Result<Account>> CreateAccount(AccountCreationRequest request);
 
-    Result<Account> DeactivateAccount(Guid id);
+    Task<Result<Account>> ActivateAccount(Guid id);
+
+    Task<Result<Account>> DeactivateAccount(Guid id);
     
-    Result<Account> UpdateAccountName(Guid id, string name);
+    Task<Result<Account>> UpdateAccountName(Guid id, string name);
 }

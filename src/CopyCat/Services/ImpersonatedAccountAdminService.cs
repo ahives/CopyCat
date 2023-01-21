@@ -20,12 +20,13 @@ public class ImpersonatedAccountAdminService :
         _accountDataProvider = accountDataProvider;
     }
 
-    public async Task<Result<ImpersonatedAccount>> CreateAccount(CreateImpersonatedAccountRequest request)
+    public async Task<Result<ImpersonatedAccount>> CreateAccount(ImpersonatedAccountCreationRequest request)
     {
         if (!request.IsValid())
             return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
-        
-        if (!_accountDataProvider.FindAccount(request.AccountId))
+
+        var acct = await _accountDataProvider.GetAccount(request.AccountId);
+        if (acct is null)
             return new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true};
 
         var account = new ImpersonatedAccount
@@ -118,8 +119,12 @@ public class ImpersonatedAccountAdminService :
         return new Result<IReadOnlyList<ImpersonatedAccount>> {Data = data, IsData = data.Any(), HasFaulted = false};
     }
 
-    public Task<Result<ImpersonatedAccount>> FindAccount(Guid id)
+    public async Task<Result<ImpersonatedAccount>> GetAccount(Guid id)
     {
-        throw new NotImplementedException();
+        var account = await _impersonationDataProvider.GetAccount(id);
+
+        return account is null
+            ? new Result<ImpersonatedAccount> {IsData = false, HasFaulted = true}
+            : new Result<ImpersonatedAccount> {Data = account.MapTo(), IsData = true, HasFaulted = false};
     }
 }
