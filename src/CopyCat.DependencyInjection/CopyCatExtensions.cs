@@ -21,8 +21,10 @@ public static class CopyCatExtensions
 
         services.AddScoped<IImpersonationAdminDataProvider, ImpersonationAdminDataProvider>();
         services.AddScoped<IAccountAdminDataProvider, AccountAdminDataProvider>();
+        services.AddScoped<IAccountImpersonationDataProvider, AccountImpersonationDataProvider>();
         services.AddScoped<IAccountAdminService, AccountAdminService>();
         services.AddScoped<IImpersonatedAccountAdminService, ImpersonatedAccountAdminService>();
+        services.AddScoped<IAccountImpersonationService, AccountImpersonationService>();
 
         return services;
     }
